@@ -17,14 +17,14 @@ TinyGPSPlus gps;
 // The serial connection to the GPS device
 SoftwareSerial ss(6,5);
 
-unsigned long time_gps;
-
 //static const int n_blocks = 10;
 
 int count = 0; // number of read blocks. If blocks > 5, write on file
 
-unsigned long delta_t;
+unsigned long time_gps;
+unsigned long t0; //accensione
 unsigned long time_acc;
+unsigned long gps_delay;
 
 File dataFile;
 String fileName;
@@ -72,7 +72,8 @@ void setup() {
         gps.encode(ss.read());
         if (gps.location.isUpdated()){
           time_gps = gps.time.value();
-          delta_t = millis();
+          unsigned long mmm = millis();
+          t0 = time_gps - mmm + gps_delay;  // tempo dell'accensione rispetto al tempo del GPS
           looppa = false;
        }
    }
@@ -93,7 +94,6 @@ void loop() {
         gps.encode(ss.read());
         if (gps.location.isUpdated()){
           time_gps = gps.time.value();
-          delta_t = millis();
          
           Serial.print("Latitude = "); 
           Serial.print(gps.location.lat(), 6);
@@ -128,7 +128,7 @@ void loop() {
     GyZ=Wire.read()<<8|Wire.read();
 
     unsigned long mm = millis();
-    time_acc = time_gps + mm - delta_t;
+    time_acc = mm + t0;
     Serial.println(String(time_acc) + ", " + String(AcX) + ", " + String(AcY) + ", " + String(AcZ) + ", " + String(GyX) + ", " + String(GyY) + ", " + String(GyZ));
 
     dataFile.print("ACC"); 
