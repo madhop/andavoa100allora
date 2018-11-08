@@ -72,8 +72,9 @@ void setup() {
         gps.encode(ss.read());
         if (gps.location.isUpdated()){
           time_gps = gps.time.value();
-          unsigned long mmm = millis();
-          t0 = time_gps - mmm + gps_delay;  // tempo dell'accensione rispetto al tempo del GPS
+          //unsigned long mmm = millis();
+          //t0 = mmm; //time_gps - mmm + gps_delay;  // tempo dell'accensione rispetto al tempo del GPS
+          t0 = time_gps;
           looppa = false;
        }
    }
@@ -93,18 +94,18 @@ void loop() {
      
         gps.encode(ss.read());
         if (gps.location.isUpdated()){
-          time_gps = gps.time.value();
+          time_gps = t0 + millis();//gps.time.value();
          
           Serial.print("Latitude = "); 
           Serial.print(gps.location.lat(), 6);
           Serial.print(" Longitude = "); 
           Serial.print(gps.location.lng(), 6);
           Serial.print(" Time = ");
-          Serial.println(gps.time.value());
+          Serial.println(time_gps);
 
           dataFile.print("GPS"); 
           dataFile.print(", "); 
-          dataFile.print(gps.time.value()); 
+          dataFile.print(time_gps); 
           dataFile.print(", "); 
           dataFile.print(gps.location.lat(), 6);
           dataFile.print(", "); 
