@@ -24,8 +24,11 @@ end
 acc_data = table2array(acc_data);
 gps_data = table2array(gps_data);
 %% 
-% plot( gps_data(:,1));
-plot(data{:,2});
+plot( acc_data(:,7));
+% plot(data{:,2});
+% hold on
+% plot( lowpass(acc_data(:,4), 0.000001));
+% hold off
 
 %% STIMA DELAY GPS
 % delay = [];
@@ -34,22 +37,4 @@ plot(data{:,2});
 %         delay = [delay,data{i,2} - data{i-1,2}];
 %     end
 % end
-%% READ DATA & SISTEMA TEMPO
-data = readtable('110122.csv'); %104107 %162736
-gps_data = [];
-acc_data = [];
-
-first_t = data(1,2);
-
-for i=1:size(data,1)
-    if strcmp(data{i,1}, 'ACC')
-        data{i,2} = data{i,2} + 11012200;
-        acc_data = [acc_data; data(i,2:8)];
-    else
-        gps_data = [gps_data; data(i,2:4)];
-    end
-    
-end
-
-acc_data = table2array(acc_data);
-gps_data = table2array(gps_data);
+%% SCINDERE X,Y,Z
