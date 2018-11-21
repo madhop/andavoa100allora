@@ -7,7 +7,7 @@ clc
 % tempo, x, y, z
 % tempo, latitudine, longitudine
 %% read data
-data = readtable('162736.csv');
+data = readtable('f144015.csv');
 gps_data = [];
 acc_data = [];
 
@@ -29,7 +29,7 @@ plot(lowpass(acc_data(:,4),0.001))
 %%
 height = mean(acc_data(:,4));
 norm_data = acc_data(:,4) - height;
-
+    
 var = abs(norm_data).^2;
 subplot(2,1,1)
 plot(norm_data)

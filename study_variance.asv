@@ -7,7 +7,7 @@ clc
 % tempo, x, y, z
 % tempo, latitudine, longitudine
 %% read data
-data = readtable('f211118.csv'); %104107 %162736 %110122 %160208 %16111417 %17111738    %f144015 %132038
+data = readtable('acc_data(11:end,7).csv'); %104107 %162736 %110122 %160208 %16111417 %17111738    %f144015
 gps_data = [];
 acc_data = [];
 
@@ -22,12 +22,13 @@ for i=1:size(data,1)%1695
 end
 
 acc_data = table2array(acc_data);
-gps_data = table2array(gps_data);
+% gps_data = table2array(gps_data);
 %% SOME PLOT
-plot(acc_data(:,1), acc_data(:,4));
-hold on
-plot(acc_data(:,1),lowpass(acc_data(:,4), 0.0000001));
-hold off
+plot(acc_data(:,1), acc_data(:,2));
+% plot(data{:,2});
+% hold on
+% plot( lowpass(acc_data(:,4), 0.000001));
+% hold off
 
 %% SCINDERE X,Y,Z
 
@@ -51,10 +52,9 @@ norm_data = acc_data(:,4) - height;
 
 var = abs(norm_data).^2;
 subplot(2,1,1)
-plot(acc_data(:,1), norm_data)
+plot(norm_data)
 subplot(2,1,2)
-plot(acc_data(:,1), var);
-% plot(acc_data(:,1), lowpass(var,0.001));
+plot(lowpass(var,0.001));
 
 %% COMPUTE ANGLE FROM GYRO
 
@@ -66,8 +66,8 @@ x_gyro = cumsum(acc_data(11:end,6) * 0.0000611) - x_offset;
 y_gyro = cumsum(acc_data(11:end,7) * 0.0000611) - x_offset;
 z_gyro = cumsum(acc_data(11:end,8) * 0.0000611) - z_offset;
 
-% pitch = cumsum()
-% roll = 
+pitch = cumsum()
+roll = 
 
 
 sum(acc_data(1:10,6));

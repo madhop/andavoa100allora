@@ -7,7 +7,11 @@
 //const int MPU=0x68;
 
 //accelerometer
-int16_t AcX,AcY,AcZ,Tmp,GyX,GyY,GyZ;
+int16_t AcX,AcY,AcZ,temp,GyX,GyY,GyZ;
+#define scale_factor_2G 16384.00
+#define scale_factor_4G 8192.00
+#define scale_factor_8G 4096.00
+#define scale_factor_16G 2048.00
 
 //gps
 //static const int RXPin = 10, TXPin = 11;
@@ -44,6 +48,10 @@ void setup() {
   Wire.beginTransmission(0x68);
   Wire.write(0x6B); 
   Wire.write(0);    
+  Wire.endTransmission(true);//******************************************************** 
+  Wire.beginTransmission(0x68); 
+  Wire.write(0x1C); //ACCEL_CONFIG register
+  Wire.write(0x08);    //4G:0x08 - 8G:0x10 - 16G:0x18
   Wire.endTransmission(true);
 
   //SD SETUP
@@ -120,10 +128,11 @@ void loop() {
     Wire.beginTransmission(0x68);
     Wire.write(0x3B);  
     Wire.endTransmission(false);
-    Wire.requestFrom(0x68,12,true);  
+    Wire.requestFrom(0x68,14,true);  
     AcX=Wire.read()<<8|Wire.read();    
     AcY=Wire.read()<<8|Wire.read();  
-    AcZ=Wire.read()<<8|Wire.read();  
+    AcZ=Wire.read()<<8|Wire.read();
+    temp = Wire.read()<<8|Wire.read(); 
     GyX=Wire.read()<<8|Wire.read();  
     GyY=Wire.read()<<8|Wire.read();  
     GyZ=Wire.read()<<8|Wire.read();
@@ -136,18 +145,18 @@ void loop() {
     dataFile.print(", "); 
     dataFile.print(time_acc); 
     dataFile.print(", "); 
-    dataFile.print(AcX);
+    dataFile.print((AcX/scale_factor_4G),4);
     dataFile.print(", "); 
-    dataFile.print(AcY);
+    dataFile.print((AcY/scale_factor_4G),4);
     dataFile.print(", "); 
-    dataFile.print(AcZ);
+    dataFile.print((AcZ/scale_factor_4G),4);
     dataFile.print(", "); 
     dataFile.print(GyX);
     dataFile.print(", "); 
     dataFile.print(GyY);
     dataFile.print(", "); 
     dataFile.println(GyZ);
-    //delay(333);
+    //delay(100);
 
     if(count > 5){
       dataFile.close();
