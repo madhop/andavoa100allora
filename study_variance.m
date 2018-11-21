@@ -25,9 +25,9 @@ acc_data = table2array(acc_data);
 gps_data = table2array(gps_data);
 %% SOME PLOT
 plot(acc_data(:,1), acc_data(:,4));
-hold on
-plot(acc_data(:,1),lowpass(acc_data(:,4), 0.0000001));
-hold off
+% hold on
+% plot(acc_data(:,1),lowpass(acc_data(:,4), 0.0000001));
+% hold off
 
 %% SCINDERE X,Y,Z
 
@@ -71,3 +71,38 @@ z_gyro = cumsum(acc_data(11:end,8) * 0.0000611) - z_offset;
 
 
 sum(acc_data(1:10,6));
+
+%% SPLIT DATA & MERGE
+asphalt = iddata(acc_data(891:1833,4),[],0.068);
+% d = fix(size(asphalt, 1)/10);
+% split_asphalt = {};
+% for i=0:8
+%     split_asphalt{i+1} = asphalt(i*d + 1:i*d + d);
+% end
+% split_asphalt{i+2} = asphalt((i+1)*d + 1:end);
+
+split_asphalt{1} = asphalt(1:100);
+split_asphalt{2} = asphalt(101:200);
+split_asphalt{3} = asphalt(201:300);
+split_asphalt{4} = asphalt(301:400);
+split_asphalt{5} = asphalt(401:500);
+split_asphalt{6} = asphalt(501:600);
+split_asphalt{7} = asphalt(601:700);
+split_asphalt{8} = asphalt(701:800);
+
+
+
+% merge
+clear d
+d = merge(split_asphalt{1},split_asphalt{2},split_asphalt{3}, split_asphalt{4},split_asphalt{5}, split_asphalt{6}, split_asphalt{7}, split_asphalt{8});
+
+de = getexp(d,[1,2,3,4,5,6,7]);
+dv = getexp(d,8);
+
+%% MODEL 
+model1 = armax(de, [4 4]);
+compare(dv, model1)
+
+%% ARMA MODEL
+data1 = iddata(acc_data(:,4),[],0.068);
+arma1 = armax(data1,[4 4]);
