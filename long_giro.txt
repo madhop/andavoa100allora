@@ -1,0 +1,10 @@
+14767159 - 14868275: autobloccanti
+14934292 - 15115430: bosco 1
+15210511 - 15262562: asfalto bello liscio
+15380649 - 15431687: sanpietrini rotondi 1
+15453539 - 15501570: prato
+15559780 - 15583643: piastrelle storte 1
+15608653 - 15624877: sterrato fatto bene
+15633668 - 15679876: piastrelle storte 2
+15731754 - 15786963: sanpietrini rotondi 2 
+16012153 - end: bosco 2
